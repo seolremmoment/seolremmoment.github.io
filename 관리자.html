@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>설렘모먼트 · 페이지 관리</title>
+<style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f4f1; color: #332f2c; font: 15px/1.7 Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+    .wrap { max-width: 1000px; margin: auto; padding: 48px 24px; }
+    .eyebrow { color: #796e60; font-size: 12px; font-weight: bold; letter-spacing: .12em; }
+    h1 { margin: 5px 0 10px; font-size: 30px; letter-spacing: -.04em; line-height: 1.4; }
+    .intro { margin: 0 0 28px; color: #6a625b; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 36px; align-items: start; }
+    .card { margin-bottom: 20px; padding: 26px; border: 1px solid #e6e0d7; border-radius: 16px; background: white; }
+    h2 { margin: 0 0 16px; font-size: 19px; }
+    p { margin: 10px 0; }
+    .button { display: block; margin: 22px 0 12px; padding: 16px; border: 0; border-radius: 8px; background: #406f4c; color: white; font: inherit; font-weight: bold; text-align: center; text-decoration: none; cursor: pointer; }
+    .button:hover { background: #345e3f; }
+    .button:focus-visible, a:focus-visible { outline: 3px solid #507cbd; outline-offset: 3px; }
+    .help { color: #746b61; font-size: 13px; }
+    ol { padding: 0; margin: 0; list-style: none; counter-reset: steps; }
+    li { position: relative; padding-left: 39px; margin: 20px 0; counter-increment: steps; }
+    li::before { content: counter(steps); display: grid; place-items: center; position: absolute; left: 0; top: 0; width: 27px; height: 27px; border-radius: 50%; background: #eee9e1; font-size: 13px; font-weight: bold; }
+    li strong { display: block; }
+    .site { padding: 12px 14px; border-radius: 8px; background: #f5f1e9; font-size: 13px; overflow-wrap: anywhere; }
+    details { margin-top: 12px; }
+    summary { cursor: pointer; font-weight: bold; }
+    details p { font-size: 13px; color: #746b61; }
+    .preview { text-align: center; }
+    .preview h2 { margin-bottom: 4px; }
+    iframe { display: block; width: 100%; height: 720px; border: 1px solid #ded6cc; border-radius: 22px; background: #efedeb; }
+    .refresh { width: 100%; margin: 14px 0 0; padding: 11px; border: 1px solid #cfc7bd; border-radius: 8px; background: white; font: inherit; cursor: pointer; }
+    .refresh:focus-visible { outline: 3px solid #507cbd; outline-offset: 3px; }
+    #previewStatus { min-height: 23px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 780px) { .wrap { padding: 28px 16px; } .layout { grid-template-columns: 1fr; gap: 20px; } .preview { max-width: 360px; width: 100%; margin: auto; } .card { padding: 22px; } h1 { font-size: 26px; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+    <div class="eyebrow">SEOLREM MOMENT</div>
+    <h1>사진과 문구 관리</h1>
+    <p class="intro">사진을 고르고 글자를 바꾼 뒤 저장하세요.<br>파일을 내려받거나 GitHub에 직접 올릴 필요가 없습니다.</p>
+    <div class="layout">
+        <div>
+            <section class="card">
+                <h2>페이지 꾸미기</h2>
+                <p>아래 버튼을 누르면 사진과 문구를 편집하는 <strong>Pages CMS</strong>가 새 창으로 열립니다.</p>
+                <a id="cmsLink" class="button" href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer">사진·문구 수정하러 가기 ↗</a>
+                <p class="help">처음에는 GitHub 계정으로 로그인해 주세요. 연결 설정이 끝난 사이트부터 편집할 수 있습니다.</p>
+                <p id="siteHint" class="site">Pages CMS에서 이 웹사이트의 저장소를 선택해 주세요.</p>
+                <ol>
+                    <li><strong>내 사이트 선택</strong>Pages CMS에 로그인하고 이 사이트를 선택하세요.</li>
+                    <li><strong>‘다운로드 페이지 꾸미기’ 열기</strong>사진, 안내 문구, 버튼 글자와 스마트스토어 주소를 바꾸세요.</li>
+                    <li><strong>Save / 저장 누르기</strong>저장하면 웹사이트에 반영되기 시작합니다. 반영이 끝날 때까지 잠시 기다려주세요.</li>
+                </ol>
+                <p class="help">사진 다운로드 주소는 고객의 QR코드에서 자동으로 가져옵니다.</p>
+            </section>
+            <section class="card">
+                <h2>처음 한 번 연결이 필요해요</h2>
+                <p>사이트를 준비하는 사람이 GitHub 저장소와 Pages CMS를 한 번 연결해야 합니다. 연결이 끝난 후에는 관리자가 위 버튼으로 편집하면 됩니다.</p>
+                <details>
+                    <summary>사이트가 목록에 안 보여요</summary>
+                    <p>Pages CMS에서 올바른 GitHub 계정으로 로그인했는지 확인하세요. 사이트를 준비한 사람에게 해당 저장소를 Pages CMS에 연결해 달라고 요청하세요.</p>
+                </details>
+                <details>
+                    <summary>저장했는데 화면이 그대로예요</summary>
+                    <p>GitHub Pages가 새 내용을 게시하는 데 시간이 걸릴 수 있습니다. 잠시 후 ‘게시한 내용 다시 확인’을 눌러주세요. 계속 바뀌지 않으면 사이트를 준비한 사람에게 배포 상태를 확인해 달라고 요청하세요.</p>
+                </details>
+                <details>
+                    <summary>예약 버튼이 작동하지 않아요</summary>
+                    <p>‘스마트스토어 예약 주소’에 https://로 시작하는 실제 주소를 넣고 저장하세요. 주소를 비워두면 고객에게 준비 중 안내가 표시됩니다.</p>
+                </details>
+            </section>
+        </div>
+        <aside class="preview">
+            <h2>현재 게시된 화면</h2>
+            <p class="help">미리보기에서는 버튼이 이동하지 않습니다.</p>
+            <iframe id="preview" src="index.html?preview=1" title="현재 게시된 고객 페이지" referrerpolicy="no-referrer"></iframe>
+            <button id="refreshPreview" class="refresh" type="button">게시한 내용 다시 확인</button>
+            <p id="previewStatus" class="help" role="status"></p>
+            <a id="customerLink" href="index.html" target="_blank" rel="noopener noreferrer">고객 페이지 새 창으로 열기 ↗</a>
+        </aside>
+    </div>
+</main>
+<script>
+(() => {
+    'use strict';
+    const siteRoot = new URL('.', location.href);
+    const host = location.hostname;
+    if (/^[a-z0-9-]+\.github\.io$/i.test(host)) {
+        const owner = host.slice(0, -'.github.io'.length);
+        const parts = siteRoot.pathname.split('/').filter(Boolean);
+        const repository = parts.length ? decodeURIComponent(parts[0]) : owner + '.github.io';
+        document.getElementById('siteHint').textContent = '선택할 사이트: ' + owner + ' / ' + repository;
+    }
+    document.getElementById('refreshPreview').addEventListener('click', () => {
+        const url = new URL('index.html', siteRoot);
+        url.searchParams.set('preview', '1');
+        url.searchParams.set('refresh', Date.now());
+        document.getElementById('preview').src = url.href;
+        document.getElementById('previewStatus').textContent = '화면을 새로고침했습니다. 게시가 끝나지 않았다면 잠시 후 다시 확인해 주세요.';
+    });
+})();
+</script>
+</body>
+</html>

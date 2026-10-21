@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="mobile-page-template" content="seolrem-moment-v2">
+    <title>설렘모먼트 · 사진 다운로드</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #efedeb; color: #403c39; font-family: Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+        .content { width: min(100%, 390px); margin: 0 auto; padding: max(48px, env(safe-area-inset-top)) 28px max(40px, env(safe-area-inset-bottom)); text-align: center; }
+        .brand { margin: 0; font: bold clamp(21px, 6vw, 25px)/1.3 Georgia, "Times New Roman", serif; overflow-wrap: anywhere; white-space: pre-line; }
+        .subtitle { margin: 6px 0 0; font-size: 16px; font-weight: 600; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
+        .heart { margin: 11px 0 12px; font-size: 19px; line-height: 1; }
+        .hero { display: block; width: 176px; max-width: 100%; height: 232px; margin: 0 auto 30px; object-fit: cover; background: #e3d8c9; }
+        .notice { margin: 0 0 22px; padding: 15px 12px; border-radius: 5px; background: #f8e4e7; font-size: 13px; font-weight: 500; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+        .actions { display: grid; gap: 16px; padding: 0 20px; }
+        .button { display: flex; min-height: 48px; align-items: center; justify-content: center; padding: 13px 14px; border: 1px solid #ffffffb3; border-radius: 6px; color: #fff; text-decoration: none; font-size: 15px; font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; transition: filter .15s; }
+        .photo-button { background: #507cbd; }
+        .booking-button { background: #589c62; }
+        .button:hover { filter: brightness(.94); }
+        .button:active { filter: brightness(.85); }
+        .button:focus-visible { outline: 3px solid #403c39; outline-offset: 4px; }
+        .button[aria-disabled="true"] { cursor: default; }
+        .status { margin: 15px 0 0; font-size: 12px; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; color: #625b54; }
+        [hidden] { display: none !important; }
+        @media (max-width: 330px) { .content { padding-left: 20px; padding-right: 20px; } .actions { padding: 0 8px; } }
+    </style>
+</head>
+<body>
+    <main class="content">
+        <h1 class="brand" id="brandTitle">SEOLREM MOMENT</h1>
+        <p class="subtitle" id="brandSubtitle">설렘모먼트 포토부스</p>
+        <div class="heart" aria-hidden="true">♥</div>
+        <img class="hero" id="heroImage" src="media/photobooth.svg" alt="설렘모먼트 포토부스" width="176" height="232">
+        <p class="notice" id="notice">아이폰 사용자는 사파리에서
+다운로드 하셔야 합니다.</p>
+        <div class="actions">
+            <a id="photoLink" class="button photo-button" aria-disabled="true">Photo Download</a>
+            <a id="bookingLink" class="button booking-button" aria-disabled="true" rel="noreferrer">행사 예약하러 가기</a>
+        </div>
+        <p class="status" id="photoStatus" role="status" hidden></p>
+        <p class="status" id="bookingStatus" role="status" hidden></p>
+        <p class="status" id="settingsStatus" role="status" hidden></p>
+        <noscript><p class="status">사진 다운로드를 이용하려면 브라우저의 JavaScript를 켜주세요.</p></noscript>
+    </main>
+
+    <!-- 웹사이트에서 사용할 문구와 이미지는 Pages CMS의 '다운로드 페이지 꾸미기'에서 수정합니다. -->
+    <!-- 아래 값은 설정을 불러오기 전 또는 오프라인에서 사용하는 기본값입니다. -->
+    <script id="page-defaults" type="application/json">
+{
+    "brandTitle": "SEOLREM MOMENT",
+    "brandSubtitle": "설렘모먼트 포토부스",
+    "image": "media/photobooth.svg",
+    "imageAlt": "설렘모먼트 포토부스 일러스트",
+    "notice": "아이폰 사용자는 사파리에서\n다운로드 하셔야 합니다.",
+    "photoButtonText": "Photo Download",
+    "bookingButtonText": "행사 예약하러 가기",
+    "bookingUrl": ""
+}
+    </script>
+    <script>
+        (() => {
+            'use strict';
+            const byId = id => document.getElementById(id);
+            const defaults = JSON.parse(byId('page-defaults').textContent);
+            const siteRoot = new URL('.', window.location.href);
+            const settingsUrl = new URL('site.json', siteRoot);
+            const params = new URLSearchParams(window.location.search);
+            const preview = params.get('preview') === '1';
+            function httpsUrl(value) {
+                try {
+                    const url = new URL(value);
+                    return url.protocol === 'https:' && !url.username && !url.password ? url.href : null;
+                } catch { return null; }
+            }
+            function imageUrl(value) {
+                if (!value.trim()) return null;
+                if (/^https:/i.test(value)) return httpsUrl(value);
+                // Pages CMS may save /media/...; keep it inside this project site's folder.
+                const local = value.replace(/^\/+/, '');
+                if (!local.startsWith('media/')) return null;
+                try {
+                    const url = new URL(local, siteRoot);
+                    const mediaRoot = new URL('media/', siteRoot);
+                    return url.origin === mediaRoot.origin && url.pathname.startsWith(mediaRoot.pathname) ? url.href : null;
+                } catch { return null; }
+            }
+            function activate(link, url) {
+                link.removeAttribute('href');
+                link.setAttribute('aria-disabled', 'true');
+                if (!url) return;
+                link.href = url;
+                link.removeAttribute('aria-disabled');
+            }
+            const hero = byId('heroImage');
+            hero.addEventListener('error', () => {
+                const fallback = imageUrl(defaults.image);
+                if (hero.src !== fallback) hero.src = fallback;
+                else hero.hidden = true;
+            });
+            function applySettings(data) {
+                if (!data || Array.isArray(data) || typeof data !== 'object') throw new Error('Invalid settings');
+                const settings = {};
+                Object.keys(defaults).forEach(key => {
+                    settings[key] = typeof data[key] === 'string' ? data[key] : '';
+                });
+                ['brandTitle', 'photoButtonText', 'bookingButtonText'].forEach(key => {
+                    if (!settings[key].trim()) settings[key] = defaults[key];
+                });
+                byId('brandTitle').textContent = settings.brandTitle;
+                byId('brandSubtitle').textContent = settings.brandSubtitle;
+                hero.alt = settings.imageAlt;
+                const image = imageUrl(settings.image);
+                hero.hidden = !image;
+                if (image) hero.src = image;
+                byId('notice').textContent = settings.notice;
+                byId('notice').hidden = !settings.notice.trim();
+                byId('photoLink').textContent = settings.photoButtonText;
+                byId('bookingLink').textContent = settings.bookingButtonText;
+                document.title = (settings.brandSubtitle || settings.brandTitle) + ' · 사진 다운로드';
+                const booking = httpsUrl(settings.bookingUrl.trim());
+                activate(byId('bookingLink'), preview ? '#' : booking);
+                byId('bookingStatus').textContent = '예약 페이지를 준비하고 있습니다.';
+                byId('bookingStatus').hidden = !!booking || preview;
+            }
+            applySettings(defaults);
+            // QR routing is independent of loading editable text or images.
+            const ids = [params.get('p'), params.get('photoId')];
+            const photoId = ids.find(id => id && /^[A-Za-z0-9_-]{1,200}$/.test(id) && !/\s/.test(id));
+            const photoUrl = photoId
+                ? 'https://drive.google.com/uc?export=download&id=' + encodeURIComponent(photoId)
+                : httpsUrl(params.get('photoUrl'));
+            activate(byId('photoLink'), preview ? '#' : photoUrl);
+            if (!photoUrl && !preview) {
+                byId('photoStatus').textContent = '사진에 인쇄된 QR코드로 접속해 주세요.';
+                byId('photoStatus').hidden = false;
+            }
+            if (preview) {
+                document.querySelectorAll('.button').forEach(link => link.addEventListener('click', event => event.preventDefault()));
+            }
+            if (window.location.protocol === 'file:') {
+                document.documentElement.dataset.settings = 'offline';
+                return;
+            }
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 5000);
+            fetch(settingsUrl, { cache: 'no-store', signal: controller.signal })
+                .then(response => {
+                    if (!response.ok) throw new Error('Settings unavailable');
+                    return response.json();
+                })
+                .then(data => {
+                    applySettings(data);
+                    document.documentElement.dataset.settings = 'loaded';
+                })
+                .catch(() => {
+                    document.documentElement.dataset.settings = 'error';
+                    byId('bookingStatus').hidden = true;
+                    byId('settingsStatus').textContent = '예약 안내를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.';
+                    byId('settingsStatus').hidden = false;
+                })
+                .finally(() => clearTimeout(timeout));
+        })();
+    </script>
+</body>
+</html>
