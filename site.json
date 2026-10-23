@@ -1,10 +1,10 @@
 {
+  "image": "media/file.png",
   "brandTitle": "SEOLREM MOMENT",
   "brandSubtitle": "설렘모먼트 포토부스",
-  "image": "media/photobooth.svg",
   "imageAlt": "설렘모먼트 포토부스 일러스트",
   "notice": "아이폰 사용자는 사파리에서\n다운로드 하셔야 합니다.",
   "photoButtonText": "Photo Download",
   "bookingButtonText": "행사 예약하러 가기",
-  "bookingUrl": ""
+  "bookingUrl": "https://mkt.shopping.naver.com/link/6ad860c304217b35835a4aaf"
 }
